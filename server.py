@@ -9,6 +9,7 @@ import pytoml
 import socket
 import stat
 import subprocess
+import sys
 import time
 
 logging.basicConfig(
@@ -61,6 +62,10 @@ def checkAndLoadSnipsConfigurations():
 
 
 def backupConfs():
+	if '--remove-backup' in sys.argv and os.path.isfile('backup.txt'):
+		_logger.info('Backup flagged for deletion, deleting...')
+		os.remove('backup.txt')
+
 	if not os.path.isfile('backup.txt'):
 		_logger.info('Creating configuration backup')
 		with open('backup.txt', 'w') as f:
