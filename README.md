@@ -17,3 +17,7 @@ This tool, when run on both your Snips main unit and your freshly installed Snip
 * Your current settings in toml file will be kept, but commented out configurations will be removed!
 * This is under development
 * A backup of your configurations can be found in backup.txt on both devices
+
+## Flags
+You can start the scripts with the following flags. Exemple: ```sudo python server.py --remove-backup```
+* --remove-backup: This will remove any created backup before recreating it
