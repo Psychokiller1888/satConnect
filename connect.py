@@ -46,6 +46,7 @@ def checkAndLoadSnipsConfigurations():
 	global _snipsConf, _running
 
 	if os.path.isfile('/etc/snips.toml'):
+		backupConfs()
 		with open('/etc/snips.toml') as confFile:
 			_snipsConf = pytoml.load(confFile)
 			if 'snips-common' not in _snipsConf:
@@ -60,10 +61,23 @@ def checkAndLoadSnipsConfigurations():
 			if 'bind' not in _snipsConf['snips-audio-server']:
 				_logger.warning('Missing configuration "snips-audio-server/bind" in snips configuration file')
 				_snipsConf['snips-audio-server']['bind'] = ''
+			_logger.info('Configurations loaded')
 	else:
 		_logger.error('Snips configuration file not found! Make sure to install Snips prior to use this tool')
 		_running = False
 	getCoreIp()
+
+
+def backupConfs():
+	if not os.path.isfile('backup.txt'):
+		_logger.info('Creating configuration backup')
+		with open('backup.txt', 'w') as f:
+			for line in open('/etc/snips.toml'):
+				f.write(line)
+
+		_logger.info('Backup made')
+	else:
+		_logger.info('Backup already available')
 
 
 def getCoreIp():
