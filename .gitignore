@@ -1,0 +1,4 @@
+.idea
+config.py
+*.pyc
+confs.txt
