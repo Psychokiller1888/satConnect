@@ -10,6 +10,7 @@ import socket
 import stat
 import subprocess
 import sys
+import shutil
 import time
 
 logging.basicConfig(
@@ -165,6 +166,17 @@ if __name__ == '__main__':
 	try:
 		checkRights()
 		chmod()
+
+		if '--restore-backup' in sys.argv:
+			_logger.info('Was asked to restore a backup of the configs')
+			if not os.path.isfile('backup.txt'):
+				_logger.error("Couldn't find any backup file, stopping...")
+				raise KeyboardInterrupt
+			else:
+				shutil.copy('backup.txt', '/etc/snips.toml')
+				_logger.info('Backup restored')
+				restartSnips()
+
 		getIp()
 		checkAndLoadSnipsConfigurations()
 		while _running:
