@@ -5,9 +5,7 @@ import json
 import logging
 import os
 import paho.mqtt.client as mqtt
-import pixels
 import pytoml
-#import RPi.GPIO as gpio
 import socket
 import stat
 import subprocess
@@ -25,7 +23,6 @@ _logger = logging.getLogger('SatConnect')
 _logger.addHandler(logging.StreamHandler())
 
 _mqttClient = None
-_leds = None
 _snipsConf = None
 _satelliteName = ''
 _coreIp = ''
@@ -212,8 +209,6 @@ def onMessage(client, userData, message):
 _running = False
 if __name__ == '__main__':
 	_logger.info('Starting up Snips SatConnect')
-	_leds = pixels.getInstance()
-	_leds.off()
 	_running = True
 	try:
 		checkRights()
@@ -229,5 +224,3 @@ if __name__ == '__main__':
 		if _mqttClient is not None:
 			_mqttClient.loop_stop()
 			_mqttClient.disconnect()
-		_leds.off()
-		#gpio.cleanup()
