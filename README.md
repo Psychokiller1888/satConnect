@@ -24,3 +24,4 @@ The main unit will require Snips installed and you need at least "snips-audio-se
 ## Flags
 You can start the scripts with the following flags. Exemple: ```sudo python server.py --remove-backup```
 * --remove-backup: This will remove any created backup before recreating it
+* --restore-backup: This will restore the backup, rrestoring the original snips.toml file
