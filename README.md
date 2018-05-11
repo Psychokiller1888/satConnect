@@ -19,7 +19,7 @@ The main unit will require Snips installed and you need at least "snips-audio-se
 * Your current settings in toml file will be kept, but commented out configurations will be removed!
 * This is under development
 * A backup of your configurations can be found in backup.txt on both devices
-* This script configures the satelitte to stream everything to the main unit. On request I can make the script evolve, if you want the hotword on the satellites per exemple
+* This script configures the satellite to stream everything to the main unit. On request I can make the script evolve, if you want the hotword on the satellites per exemple
 
 ## Flags
 You can start the scripts with the following flags. Exemple: ```sudo python server.py --remove-backup```
