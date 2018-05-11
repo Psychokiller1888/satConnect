@@ -14,6 +14,10 @@ The main unit will require Snips installed and you need at least "snips-audio-se
 * On the satellite ```sudo python connect.py```
 * Follow the instructions on the satellite terminal
 
+## Why sudo?
+
+Because we need to write to the snips configuration file
+
 ## Be aware
 
 * Your current settings in toml file will be kept, but commented out configurations will be removed!
@@ -25,3 +29,4 @@ The main unit will require Snips installed and you need at least "snips-audio-se
 You can start the scripts with the following flags. Exemple: ```sudo python server.py --remove-backup```
 * --remove-backup: This will remove any created backup before recreating it
 * --restore-backup: This will restore the backup, rrestoring the original snips.toml file
+* --disconnect: For satellites only, removes the satellite from main unit

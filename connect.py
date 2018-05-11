@@ -64,7 +64,11 @@ def checkAndLoadSnipsConfigurations():
 	else:
 		_logger.error('Snips configuration file not found! Make sure to install Snips prior to use this tool')
 		_running = False
-	getCoreIp()
+
+	if '--disconnect' in sys.argv:
+		disconnectSatellite()
+	else:
+		getCoreIp()
 
 
 def backupConfs():
@@ -81,6 +85,27 @@ def backupConfs():
 		_logger.info('Backup made')
 	else:
 		_logger.info('Backup already available')
+
+
+def disconnectSatellite():
+	global _snipsConf, _running
+
+	_logger.info('Disconnecting satellite from main unit')
+	if _snipsConf['snips-common']['mqtt'] == '' or _snipsConf['snips-audio-server']['bind'] == '':
+		_logger.error("Was asked to disconnect but it doesn't look like this is a satellite")
+		_running = False
+	else:
+		satelliteName = _snipsConf['snips-audio-server']['bind']
+
+		_logger.info('Writting local toml configuration...')
+		del _snipsConf['snips-common']['mqtt']
+		del _snipsConf['snips-audio-server']['bind']
+
+		f = open('/etc/snips.toml', 'w')
+		pytoml.dump(_snipsConf, f)
+		f.close()
+
+		_mqttClient.publish('satConnect/server/disconnect', json.dumps({'name': satelliteName}))
 
 
 def getCoreIp():
