@@ -133,7 +133,29 @@ def addSatellite(name):
 
 		restartSnips()
 	except:
-		_logger.error('Updating and restarting Snips failed')
+		_logger.error('Updating and restarting Snips after adding satellite failed')
+		_mqttClient.publish('satConnect/server/confUpdateFailed', json.dumps({}))
+
+
+def removeSatellite(name):
+	global _snipsConf
+
+	_logger.info('Removing satellite')
+
+	try:
+		if 'audio' not in _snipsConf['snips-hotword']:
+			_snipsConf['snips-hotword']['audio'] = ['default@mqtt']
+
+		if name in _snipsConf['snips-hotword']['audio']:
+			del _snipsConf['snips-hotword']['audio'][name]
+
+		f = open('/etc/snips.toml', 'w')
+		pytoml.dump(_snipsConf, f)
+		f.close()
+
+		restartSnips()
+	except:
+		_logger.error('Updating and restarting Snips after satellite deletion failed')
 		_mqttClient.publish('satConnect/server/confUpdateFailed', json.dumps({}))
 
 
@@ -157,6 +179,9 @@ def onMessage(client, userData, message):
 
 	elif message.topic == 'satConnect/server/addSatellite':
 		addSatellite(payload['name'])
+
+	elif message.topic == 'satConnect/server/disconnect':
+		removeSatellite(payload['name'])
 
 
 _running = False
