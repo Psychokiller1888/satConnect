@@ -161,7 +161,12 @@ def removeSatellite(name):
 
 def restartSnips():
 	global _running
+
 	_logger.info('Restarting local Snips')
+
+	if _mqttClient is None:
+		connectMqtt()
+
 	subprocess.call(['./snipsRestart.sh'])
 	_mqttClient.publish('satConnect/server/confUpdated', json.dumps({}))
 	_logger.info('All done!')
