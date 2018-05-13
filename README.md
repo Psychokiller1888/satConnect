@@ -6,11 +6,22 @@ This tool, when run on both your Snips main unit and your freshly installed Snip
 
 The main unit will require Snips installed and you need at least "snips-audio-server" installed on your satellite
 
-## Install
+## Install (First time...)
 
 * On both the new satellite and the main unit ```git clone https://github.com/Psychokiller1888/satConnect.git```
 * On both the new satellite and the main unit ```cd satConnect```
 * On both the new satellite and the main unit ```sudo pip install -r requirements.txt```
+* On the main unit ```sudo python server.py```
+* On the satellite ```sudo python connect.py```
+* Follow the instructions on the satellite terminal
+
+## Install (Again)
+
+If you already used this tool, you don't need to do anything on the main unit, but follow the steps only for the satellites as the script is already installed on the main unit. 
+
+* On the new satellite ```git clone https://github.com/Psychokiller1888/satConnect.git```
+* On both the new satellite and the main unit ```cd satConnect```
+* On the new satellite ```sudo pip install -r requirements.txt```
 * On the main unit ```sudo python server.py```
 * On the satellite ```sudo python connect.py```
 * Follow the instructions on the satellite terminal
