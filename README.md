@@ -28,5 +28,5 @@ Because we need to write to the snips configuration file
 ## Flags
 You can start the scripts with the following flags. Exemple: ```sudo python server.py --remove-backup```
 * --remove-backup: This will remove any created backup before recreating it
-* --restore-backup: This will restore the backup, rrestoring the original snips.toml file
+* --restore-backup: This will restore the backup, restoring the original snips.toml file
 * --disconnect: For satellites only, removes the satellite from main unit
