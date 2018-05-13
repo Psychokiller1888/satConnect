@@ -10,6 +10,7 @@ The main unit will require Snips installed and you need at least "snips-audio-se
 
 * On both the new satellite and the main unit ```git clone https://github.com/Psychokiller1888/satConnect.git```
 * On both the new satellite and the main unit ```cd satConnect```
+* On both the new satellite and the main unit ```sudo pip install -r requirements.txt```
 * On the main unit ```sudo python server.py```
 * On the satellite ```sudo python connect.py```
 * Follow the instructions on the satellite terminal
