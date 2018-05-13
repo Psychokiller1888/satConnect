@@ -105,6 +105,9 @@ def disconnectSatellite():
 		pytoml.dump(_snipsConf, f)
 		f.close()
 
+		if _mqttClient is None:
+			connectMqtt()
+
 		_mqttClient.publish('satConnect/server/disconnect', json.dumps({'name': satelliteName}))
 
 
@@ -125,6 +128,7 @@ def getCoreIp():
 			_logger.info('Ip address is alive')
 
 	connectMqtt()
+	defineSatelliteName()
 
 def connectMqtt():
 	global _mqttClient, _coreIp
@@ -146,8 +150,6 @@ def connectMqtt():
 		_logger.error("Couldn't connect to mqtt server on core ip {}".format(_coreIp))
 		_coreIp = ''
 		getCoreIp()
-
-	defineSatelliteName()
 
 
 def defineSatelliteName():
