@@ -4,7 +4,7 @@
 
 This tool, when run on both your Snips main unit and your freshly installed Snips satellite will help you configure both devices!
 
-The main unit will require Snips installed and you need at least "snips-audio-server" installed on your satellite
+The main unit will require Snips installed and only "snips-audio-server" installed on your satellite
 
 ## Install (First time...)
 
