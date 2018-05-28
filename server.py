@@ -32,6 +32,7 @@ def checkRights():
 	if os.getuid() != 0:
 		_logger.error('Please start this tool with sudo')
 		_running = False
+		raise KeyboardInterrupt
 
 
 def chmod():
@@ -59,6 +60,7 @@ def checkAndLoadSnipsConfigurations():
 	else:
 		_logger.error('Snips configuration file not found! Make sure to install Snips prior to use this tool')
 		_running = False
+		raise KeyboardInterrupt
 	connectMqtt()
 
 
@@ -95,6 +97,7 @@ def connectMqtt():
 	except socket.error:
 		_logger.error("Couldn't connect to mqtt localhost server, aborting")
 		_running = False
+		raise KeyboardInterrupt
 
 
 def checkNameAvailability(name):
@@ -171,6 +174,7 @@ def restartSnips():
 	_mqttClient.publish('satConnect/server/confUpdated', json.dumps({}))
 	_logger.info('All done!')
 	_running = False
+	raise KeyboardInterrupt
 
 
 def onMessage(client, userData, message):

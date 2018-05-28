@@ -34,6 +34,7 @@ def checkRights():
 	if os.getuid() != 0:
 		_logger.error('Please start this tool with sudo')
 		_running = False
+		raise KeyboardInterrupt
 
 
 def chmod():
@@ -64,6 +65,7 @@ def checkAndLoadSnipsConfigurations():
 	else:
 		_logger.error('Snips configuration file not found! Make sure to install Snips prior to use this tool')
 		_running = False
+		raise KeyboardInterrupt
 
 	if '--disconnect' in sys.argv:
 		disconnectSatellite()
@@ -94,6 +96,7 @@ def disconnectSatellite():
 	if _snipsConf['snips-common']['mqtt'] == '' or _snipsConf['snips-audio-server']['bind'] == '':
 		_logger.error("Was asked to disconnect but it doesn't look like this is a satellite")
 		_running = False
+		raise KeyboardInterrupt
 	else:
 		satelliteName = _snipsConf['snips-audio-server']['bind']
 
@@ -231,6 +234,7 @@ def onMessage(client, userData, message):
 	elif message.topic == 'satConnect/server/confUpdateFailed':
 		_logger.error('Unfortunately we were unable to update the main device, aborting')
 		_running = False
+		raise KeyboardInterrupt
 
 
 
