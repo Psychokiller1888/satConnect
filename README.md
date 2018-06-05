@@ -4,7 +4,8 @@
 
 This tool, when run on both your Snips main unit and your freshly installed Snips satellite will help you configure both devices!
 
-The main unit will require Snips installed and only "snips-audio-server" installed on your satellite
+* The main unit needs Snips completly installed
+* The satellites only need "snips-audio-server" installed. Follow the same instructions as for snips but instead of ```sudo apt-get install snips-platform-voice``` do ```sudo apt-get install snips-audio-server```
 
 ## Install (First time...)
 
