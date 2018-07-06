@@ -193,13 +193,14 @@ def updateCoreToml():
 def restartSnips():
 	_logger.info('Restarting local Snips')
 	subprocess.call(['./snipsRestart.sh'])
-	done()
+	done(False)
 
 
-def done():
+def done(afterConnect=True):
 	global _running
-	_logger.info('All done! This satellite is now connected and should respond.')
-	raw_input('Press enter')
+	if afterConnect:
+		_logger.info('All done! This satellite is now connected and should respond.')
+		raw_input('Press enter')
 	_running = False
 
 
@@ -256,8 +257,8 @@ if __name__ == '__main__':
 				shutil.copy('backup.txt', '/etc/snips.toml')
 				_logger.info('Backup restored')
 				restartSnips()
-
-		checkAndLoadSnipsConfigurations()
+		else:
+			checkAndLoadSnipsConfigurations()
 		while _running:
 			time.sleep(0.1)
 	except KeyboardInterrupt:

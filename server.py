@@ -162,19 +162,20 @@ def removeSatellite(name):
 		_mqttClient.publish('satConnect/server/confUpdateFailed', json.dumps({}))
 
 
-def restartSnips():
+def restartSnips(afterConnect=True):
 	global _running
 
 	_logger.info('Restarting local Snips')
 
-	if _mqttClient is None:
-		connectMqtt()
+	if afterConnect:
+		if _mqttClient is None:
+			connectMqtt()
 
-	subprocess.call(['./snipsRestart.sh'])
-	_mqttClient.publish('satConnect/server/confUpdated', json.dumps({}))
+		subprocess.call(['./snipsRestart.sh'])
+		_mqttClient.publish('satConnect/server/confUpdated', json.dumps({}))
+
 	_logger.info('All done!')
 	_running = False
-	raise KeyboardInterrupt
 
 
 def onMessage(client, userData, message):
@@ -209,10 +210,11 @@ if __name__ == '__main__':
 			else:
 				shutil.copy('backup.txt', '/etc/snips.toml')
 				_logger.info('Backup restored')
-				restartSnips()
+				restartSnips(False)
+		else:
+			getIp()
+			checkAndLoadSnipsConfigurations()
 
-		getIp()
-		checkAndLoadSnipsConfigurations()
 		while _running:
 			time.sleep(0.1)
 	except KeyboardInterrupt:
