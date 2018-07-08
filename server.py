@@ -1,13 +1,13 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 
+import commons
 import json
 import logging
 import os
 import paho.mqtt.client as mqtt
 import pytoml
 import socket
-import stat
 import subprocess
 import sys
 import shutil
@@ -27,19 +27,6 @@ _mqttClient = None
 _snipsConf = None
 
 
-def checkRights():
-	global _running
-	if os.getuid() != 0:
-		_logger.error('Please start this tool with sudo')
-		_running = False
-		raise KeyboardInterrupt
-
-
-def chmod():
-	st = os.stat('snipsRestart.sh')
-	os.chmod('snipsRestart.sh', st.st_mode | stat.S_IEXEC)
-
-
 def getIp():
 	global MY_IP
 	s = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
@@ -53,7 +40,7 @@ def checkAndLoadSnipsConfigurations():
 	global _snipsConf, _running
 
 	if os.path.isfile('/etc/snips.toml'):
-		backupConfs()
+		commons.backupConfs(_logger)
 		with open('/etc/snips.toml') as confFile:
 			_snipsConf = pytoml.load(confFile)
 		_logger.info('Configurations loaded')
@@ -62,22 +49,6 @@ def checkAndLoadSnipsConfigurations():
 		_running = False
 		raise KeyboardInterrupt
 	connectMqtt()
-
-
-def backupConfs():
-	if '--remove-backup' in sys.argv and os.path.isfile('backup.txt'):
-		_logger.info('Backup flagged for deletion, deleting...')
-		os.remove('backup.txt')
-
-	if not os.path.isfile('backup.txt'):
-		_logger.info('Creating configuration backup')
-		with open('backup.txt', 'w') as f:
-			for line in open('/etc/snips.toml'):
-				f.write(line)
-
-		_logger.info('Backup made')
-	else:
-		_logger.info('Backup already available')
 
 
 def connectMqtt():
@@ -199,24 +170,27 @@ if __name__ == '__main__':
 	_logger.info('Starting up Snips SatConnect Server')
 	_running = True
 	try:
-		checkRights()
-		chmod()
-
-		if '--restore-backup' in sys.argv:
-			_logger.info('Was asked to restore a backup of the configs')
-			if not os.path.isfile('backup.txt'):
-				_logger.error("Couldn't find any backup file, stopping...")
-				raise KeyboardInterrupt
-			else:
-				shutil.copy('backup.txt', '/etc/snips.toml')
-				_logger.info('Backup restored')
-				restartSnips(False)
+		if not commons.checkRights():
+			_logger.error('Please start this tool with sudo')
+			_running = False
 		else:
-			getIp()
-			checkAndLoadSnipsConfigurations()
+			commons.chmod()
 
-		while _running:
-			time.sleep(0.1)
+			if '--restore-backup' in sys.argv:
+				_logger.info('Was asked to restore a backup of the configs')
+				if not os.path.isfile('backup.txt'):
+					_logger.error("Couldn't find any backup file, stopping...")
+					raise KeyboardInterrupt
+				else:
+					shutil.copy('backup.txt', '/etc/snips.toml')
+					_logger.info('Backup restored')
+					restartSnips(False)
+			else:
+				getIp()
+				checkAndLoadSnipsConfigurations()
+
+			while _running:
+				time.sleep(0.1)
 	except KeyboardInterrupt:
 		_running = False
 		pass

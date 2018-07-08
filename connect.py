@@ -1,6 +1,7 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 
+import commons
 import json
 import logging
 import os
@@ -29,24 +30,11 @@ _satelliteName = ''
 _coreIp = ''
 
 
-def checkRights():
-	global _running
-	if os.getuid() != 0:
-		_logger.error('Please start this tool with sudo')
-		_running = False
-		raise KeyboardInterrupt
-
-
-def chmod():
-	st = os.stat('snipsRestart.sh')
-	os.chmod('snipsRestart.sh', st.st_mode | stat.S_IEXEC)
-
-
 def checkAndLoadSnipsConfigurations():
 	global _snipsConf, _running
 
 	if os.path.isfile('/etc/snips.toml'):
-		backupConfs()
+		commons.backupConfs(_logger)
 		with open('/etc/snips.toml') as confFile:
 			_snipsConf = pytoml.load(confFile)
 			if 'snips-common' not in _snipsConf:
@@ -71,22 +59,6 @@ def checkAndLoadSnipsConfigurations():
 		disconnectSatellite()
 	else:
 		getCoreIp()
-
-
-def backupConfs():
-	if '--remove-backup' in sys.argv and os.path.isfile('backup.txt'):
-		_logger.info('Backup flagged for deletion, deleting...')
-		os.remove('backup.txt')
-
-	if not os.path.isfile('backup.txt'):
-		_logger.info('Creating configuration backup')
-		with open('backup.txt', 'w') as f:
-			for line in open('/etc/snips.toml'):
-				f.write(line)
-
-		_logger.info('Backup made')
-	else:
-		_logger.info('Backup already available')
 
 
 def disconnectSatellite():
@@ -245,22 +217,25 @@ if __name__ == '__main__':
 	_running = True
 
 	try:
-		checkRights()
-		chmod()
-
-		if '--restore-backup' in sys.argv:
-			_logger.info('Was asked to restore a backup of the configs')
-			if not os.path.isfile('backup.txt'):
-				_logger.error("Couldn't find any backup file, stopping...")
-				raise KeyboardInterrupt
-			else:
-				shutil.copy('backup.txt', '/etc/snips.toml')
-				_logger.info('Backup restored')
-				restartSnips()
+		if not commons.checkRights():
+			_logger.error('Please start this tool with sudo')
+			_running = False
 		else:
-			checkAndLoadSnipsConfigurations()
-		while _running:
-			time.sleep(0.1)
+			commons.chmod()
+
+			if '--restore-backup' in sys.argv:
+				_logger.info('Was asked to restore a backup of the configs')
+				if not os.path.isfile('backup.txt'):
+					_logger.error("Couldn't find any backup file, stopping...")
+					raise KeyboardInterrupt
+				else:
+					shutil.copy('backup.txt', '/etc/snips.toml')
+					_logger.info('Backup restored')
+					restartSnips()
+			else:
+				checkAndLoadSnipsConfigurations()
+			while _running:
+				time.sleep(0.1)
 	except KeyboardInterrupt:
 		_running = False
 		pass
