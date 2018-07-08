@@ -2,10 +2,10 @@
 
 ## An easy way to add satellites to your Snips main unit
 
-This tool, when run on both your Snips main unit and your freshly installed Snips satellite will help you configure both devices!
+This tool, when run on both your Snips main unit and your freshly installed Snips satellite, will help you configure the both of them!
 
-* The main unit needs Snips completly installed
-* The satellites only need "snips-audio-server" installed. Follow the same instructions as for snips but instead of ```sudo apt-get install snips-platform-voice``` do ```sudo apt-get install snips-audio-server```
+* Your main unit needs Snips completly installed
+* Your satellites only need "snips-audio-server" installed. Follow the same instructions as for snips but instead of ```sudo apt-get install snips-platform-voice``` do ```sudo apt-get install snips-audio-server```
 
 ## Install (First time...)
 
