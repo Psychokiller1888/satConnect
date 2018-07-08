@@ -1,4 +1,7 @@
 .idea
-config.py
 *.pyc
-confs.txt
+backup.txt
+satlogs.log
+serverlogs.log
+test.py
+prod.toml
