@@ -43,7 +43,7 @@
 # session_timeout = 15
 # lambda_timeout = 5
 # retry_count = 3
-# sound_feedback_disabled_default = false
+sound_feedback_disabled_default = false
 
 [snips-hotword]
 # model = "/usr/share/snips/hotword"
@@ -68,3 +68,10 @@
 ## customtts specific configuration (here configured to use picotts using the en-US language)
 ## available placeholder variables : %%OUTPUT_FILE%%, %%LANG%%, %%TEXT%%
 # customtts = { command = ["pico2wave", "-w", "%%OUTPUT_FILE%%", "-l", "en-US", "%%TEXT%%"] }
+
+[snips-pegasus]
+# address = "0.0.0.0:8443"
+## Pegasus TLS configuration
+## Self signing certificates are generated with /usr/local/bin/snips-pegasus-tls-keygen.sh
+# tls_certificate_chain = "/var/lib/snips/pegasus/tls/server.fullchain"
+# tls_private_key = "/var/lib/snips//pegasus/tls/server.key"
